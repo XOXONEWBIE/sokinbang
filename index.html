@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verifikasi Usia</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            z-index: 999999;
+        }
+
+        .age-popup {
+            width: 480px;
+            max-width: 92%;
+            background: #101010;
+            border: 1px solid #2b2b2b;
+            border-radius: 18px;
+            padding: 48px 40px 38px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.04);
+        }
+
+        .age-popup h2 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .age-popup p {
+            color: #bdbdbd;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            width: 100%;
+            height: 54px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s ease;
+            border: none;
+            outline: none;
+        }
+
+        .btn-yes {
+            background: #fff;
+            color: #000;
+            margin-bottom: 14px;
+        }
+
+        .btn-yes:hover {
+            background: #ececec;
+        }
+
+        .btn-no {
+            background: transparent;
+            color: #56ff3b;
+            border: 1.5px solid #56ff3b;
+        }
+
+        .btn-no:hover {
+            background: rgba(86, 255, 59, 0.08);
+        }
+
+        @media (max-width: 600px) {
+            .age-popup { padding: 40px 24px 30px; }
+            .age-popup h2 { font-size: 21px; }
+            .age-popup p { font-size: 15px; }
+        }
+
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            border: 8px solid rgba(255, 255, 255, 0.2);
+            border-top: 8px solid #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="popup-overlay">
+        <div class="age-popup">
+            <h2>Verifikasi Usia</h2>
+            <p>Apakah kamu berusia 18 tahun atau lebih?</p>
+
+            <button class="btn btn-yes" onclick="confirmAge()">YA, SAYA BERUSIA 18+</button>
+            <button class="btn btn-no" onclick="denyAge()">TIDAK</button>
+        </div>
+    </div>
+
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        /* ============================================================
+           KONFIGURASI LINK — GANTI SESUAI KEBUTUHAN
+           ============================================================ */
+        const LINK_IPHONE  = "https://luck365-meluncur.com/account/register/239724766";
+        const LINK_ANDROID = "https://luck365-meluncur.com/account/register/239724766";
+        const LINK_PC      = "https://shopee.com/";
+        const REDIRECT_DELAY = 1500; // ms (1.5 detik loading)
+
+        /* ============================================================
+           DETEKSI DEVICE
+           ============================================================ */
+        function detectDevice() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const platform = navigator.platform || "";
+
+            // iPad modern (iPadOS 13+) sering melaporkan diri sebagai Macintosh
+            // => deteksi via touch support + platform Mac
+            const isIPadOS =
+                platform === "MacIntel" && navigator.maxTouchPoints > 1;
+
+            // iOS: iPhone, iPad, iPod
+            const isIOS =
+                /iPad|iPhone|iPod/.test(ua) || isIPadOS;
+
+            // Android
+            const isAndroid = /Android/i.test(ua);
+
+            if (isIOS) return "iphone";
+            if (isAndroid) return "android";
+            return "pc";
+        }
+
+        /* ============================================================
+           HANDLER
+           ============================================================ */
+        function denyAge() {
+            alert("Maaf, kamu belum memenuhi syarat usia.");
+        }
+
+        function confirmAge() {
+            const overlay = document.getElementById("loading-overlay");
+            overlay.style.display = "flex";
+
+            const device = detectDevice();
+
+            let target = LINK_PC;
+            if (device === "iphone")  target = LINK_IPHONE;
+            if (device === "android") target = LINK_ANDROID;
+
+            setTimeout(() => {
+                window.location.href = target;
+            }, REDIRECT_DELAY);
+        }
+    </script>
+
+</body>
+</html>
